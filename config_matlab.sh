@@ -19,19 +19,14 @@ mkdir /local_scratch/$USER
 SCRATCH=/local_scratch/$USER
 
 cp -R $PBS_O_WORKDIR/$INPUT_FOLDER/* $SCRATCH
-# cp $PBS_O_WORKDIR/$INPUT_FOLDER/*.mac $SCRATCH
-# cp $PBS_O_WORKDIR/$INPUT_FOLDER/*.m $SCRATCH
-# cp $PBS_O_WORKDIR/$INPUT_FOLDER/*.mat $SCRATCH
 
 ls $SCRATCH/*.txt | parallel -j24 'ansys181 -dir /local_scratch/echodor/ -j $RANDOM -s read -l en-us -b -i {}'
 
-cd /local_scratch/echodor/
+cd /local_scratch/echodor/ # MATLAB needs to be run from current directory
 
+# Prevent MATLAB from using all cores of a node (kills job if takes more than initially allocated) and run post-processing script
 taskset -c 0-$(($OMP_NUM_THREADS-1)) matlab -nodisplay -nodesktop -nosplash -r Results_Read
 
 cp $SCRATCH/*.mat $PBS_O_WORKDIR/$INPUT_FOLDER
-
-# TIME=$(date +"%m-%d_%H-%M")
-# mkdir $PBS_O_WORKDIR/parametric_test_$TIME
 
 rm -rf $SCRATCH
