@@ -23,7 +23,4 @@ cp $PBS_O_WORKDIR/$INPUT_FOLDER/*.mac $SCRATCH
 ls $SCRATCH/*.txt | parallel -j20 'ansys181 -dir /local_scratch/echodor/ -j $RANDOM -s read -l en-us -b -i {}'
 cp $SCRATCH/*t.txt $PBS_O_WORKDIR/$INPUT_FOLDER
 
-# TIME=$(date +"%m-%d_%H-%M")
-# mkdir $PBS_O_WORKDIR/parametric_test_$TIME
-
 rm -rf $SCRATCH
